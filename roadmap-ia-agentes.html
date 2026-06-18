@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap IA & Agentes — Trilha Técnica Completa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #0b0d11;
+    --bg2:       #111318;
+    --bg3:       #191c23;
+    --line:      rgba(255,255,255,0.07);
+    --line2:     rgba(255,255,255,0.13);
+    --txt:       #e8e9eb;
+    --txt2:      #8b8d96;
+    --txt3:      #555864;
+    --mono:      'IBM Plex Mono', monospace;
+    --sans:      'Inter', sans-serif;
+
+    --c0:        #7a7f8a;   /* fase 0 – cinza neutro */
+    --c1:        #4d9fff;   /* fase 1 – azul */
+    --c2:        #3ecf8e;   /* fase 2 – verde teal */
+    --c3:        #a78bfa;   /* fase 3 – violeta */
+    --c4:        #f97316;   /* fase 4 – laranja */
+    --c5:        #f43f5e;   /* fase 5 – rosa/vermelho */
+
+    --radius:    6px;
+    --radius-lg: 10px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--txt);
+    line-height: 1.6;
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg2);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+
+  .sidebar-brand {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sidebar-brand-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt3);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sidebar-brand-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--txt);
+    line-height: 1.3;
+  }
+
+  .sidebar-nav { padding: 12px 0; flex: 1; }
+  .nav-section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt3);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 20px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.03); }
+  .nav-item.active { border-left-color: var(--phase-color); background: rgba(255,255,255,0.04); }
+
+  .nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--phase-color);
+    flex-shrink: 0;
+    opacity: .6;
+    transition: opacity .15s;
+  }
+  .nav-item.active .nav-dot,
+  .nav-item:hover .nav-dot { opacity: 1; }
+
+  .nav-text { font-size: 13px; color: var(--txt2); line-height: 1.3; }
+  .nav-item.active .nav-text { color: var(--txt); font-weight: 500; }
+
+  .nav-duration {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt3);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .progress-overall-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt3);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-overall-track {
+    height: 3px;
+    background: var(--line2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-overall-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4d9fff, #a78bfa, #f43f5e);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1s ease;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 60px 56px 48px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(77,159,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt3);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, #4d9fff 0%, #a78bfa 50%, #f43f5e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: var(--txt2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat { }
+  .stat-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--txt);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--txt3);
+    margin-top: 4px;
+  }
+
+  /* ── PHASE SECTION ── */
+  .phase-section {
+    padding: 48px 56px;
+    border-bottom: 1px solid var(--line);
+  }
+  .phase-section:last-child { border-bottom: none; }
+
+  .phase-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .phase-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--phase-color);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    border-radius: var(--radius);
+    opacity: .7;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .phase-info { flex: 1; }
+  .phase-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -.01em;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .phase-desc {
+    font-size: 14px;
+    color: var(--txt2);
+    line-height: 1.65;
+    max-width: 640px;
+  }
+  .phase-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .phase-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,0.05);
+    color: var(--txt2);
+    border: 1px solid var(--line2);
+  }
+
+  /* ── TOPIC GRID ── */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .topic-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .topic-card:hover { border-color: var(--line2); }
+
+  .topic-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: background .15s;
+  }
+  .topic-head:hover { background: rgba(255,255,255,0.025); }
+  .topic-card.open .topic-head { border-bottom-color: var(--line); }
+
+  .topic-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .topic-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--txt);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .topic-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--txt3);
+    padding: 2px 7px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    border: 1px solid var(--line);
+  }
+  .topic-chevron {
+    color: var(--txt3);
+    font-size: 12px;
+    transition: transform .25s;
+    flex-shrink: 0;
+  }
+  .topic-card.open .topic-chevron { transform: rotate(180deg); }
+
+  .topic-body {
+    display: none;
+    padding: 16px;
+  }
+  .topic-card.open .topic-body { display: block; }
+
+  /* ── SUBTOPIC ── */
+  .subtopic {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .subtopic:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .subtopic-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .subtopic-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--txt);
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+    font-weight: 400;
+  }
+  .tag-core     { color: #4d9fff; border-color: rgba(77,159,255,0.3); background: rgba(77,159,255,0.07); }
+  .tag-advanced { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.07); }
+  .tag-practical{ color: #3ecf8e; border-color: rgba(62,207,142,0.3); background: rgba(62,207,142,0.07); }
+  .tag-research { color: #f97316; border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.07); }
+
+  .subtopic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .subtopic-list li {
+    font-size: 12.5px;
+    color: var(--txt2);
+    line-height: 1.55;
+    padding-left: 14px;
+    position: relative;
+  }
+  .subtopic-list li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--txt3);
+    font-weight: 700;
+  }
+
+  /* ── TIMELINE BAR ── */
+  .timeline-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 0 56px 0;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .timeline-bar::-webkit-scrollbar { display: none; }
+  .tl-phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+  }
+  .tl-phase:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 100%;
+    height: 1px;
+    background: var(--line2);
+  }
+  .tl-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--phase-color);
+    opacity: .8;
+    z-index: 1;
+    position: relative;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--phase-color);
+  }
+  .tl-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--txt3);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-top: 7px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .tl-dur {
+    font-size: 10px;
+    color: var(--txt3);
+    margin-top: 2px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 20px 56px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg2);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--txt2);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      overflow-x: auto;
+    }
+    .sidebar-brand { display: none; }
+    .sidebar-nav { display: flex; flex-direction: row; padding: 8px; flex-wrap: nowrap; overflow-x: auto; }
+    .nav-section-label { display: none; }
+    .nav-item { padding: 6px 12px; white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; }
+    .nav-item.active { border-bottom-color: var(--phase-color); border-left-color: transparent; }
+    .nav-duration { display: none; }
+    .sidebar-footer { display: none; }
+    .hero { padding: 32px 24px; }
+    .hero-title { font-size: 26px; }
+    .phase-section { padding: 32px 24px; }
+    .timeline-bar { margin: 0 24px; }
+    .legend { padding: 16px 24px; }
+    .topic-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SCROLL SPY ── */
+  .phase-section { scroll-margin-top: 0; }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line2);
+    border-radius: var(--radius);
+    padding: 7px 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .search-input::placeholder { color: var(--txt3); }
+  .search-input:focus { border-color: rgba(255,255,255,0.25); }
+
+  /* ── HIGHLIGHT ── */
+  mark {
+    background: rgba(249,115,22,0.3);
+    color: #fff;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  /* ── SCROLL TO TOP ── */
+  .to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 36px; height: 36px;
+    background: var(--bg3);
+    border: 1px solid var(--line2);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--txt2);
+    font-size: 16px;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all .2s;
+    z-index: 100;
+  }
+  .to-top.visible { opacity: 1; transform: none; }
+  .to-top:hover { background: var(--bg2); color: var(--txt); border-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-label">trilha técnica</div>
+      <div class="sidebar-brand-title">IA & Agentes<br>de IA</div>
+    </div>
+
+    <div class="search-wrap">
+      <input class="search-input" type="search" placeholder="buscar tópico..." id="search-input" oninput="handleSearch(this.value)">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">fases</div>
+      <a class="nav-item active" href="#fase-0" style="--phase-color: var(--c0)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c0)"></div>
+        <span class="nav-text">Fundamentos</span>
+        <span class="nav-duration">3–4m</span>
+      </a>
+      <a class="nav-item" href="#fase-1" style="--phase-color: var(--c1)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c1)"></div>
+        <span class="nav-text">ML Clássico</span>
+        <span class="nav-duration">3m</span>
+      </a>
+      <a class="nav-item" href="#fase-2" style="--phase-color: var(--c2)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c2)"></div>
+        <span class="nav-text">Deep Learning</span>
+        <span class="nav-duration">4–5m</span>
+      </a>
+      <a class="nav-item" href="#fase-3" style="--phase-color: var(--c3)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c3)"></div>
+        <span class="nav-text">LLMs & NLP</span>
+        <span class="nav-duration">4–5m</span>
+      </a>
+      <a class="nav-item" href="#fase-4" style="--phase-color: var(--c4)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c4)"></div>
+        <span class="nav-text">Agentes de IA</span>
+        <span class="nav-duration">3–4m</span>
+      </a>
+      <a class="nav-item" href="#fase-5" style="--phase-color: var(--c5)" onclick="setActive(this)">
+        <div class="nav-dot" style="--phase-color: var(--c5)"></div>
+        <span class="nav-text">Produção &amp; Research</span>
+        <span class="nav-duration">∞</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-overall-label">
+        <span>progresso estimado</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-overall-track">
+        <div class="progress-overall-fill" id="prog-fill"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="main-scroll">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">roadmap técnico · 2025–2026</div>
+      <h1 class="hero-title">IA & <span>Agentes de IA</span><br>Trilha Completa</h1>
+      <p class="hero-sub">Do alicerce matemático ao deployment de sistemas multi-agente em produção. Conteúdo denso, técnico, sem atalhos.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-value">6</div><div class="stat-label">fases</div></div>
+        <div class="stat"><div class="stat-value">23</div><div class="stat-label">módulos</div></div>
+        <div class="stat"><div class="stat-value">80+</div><div class="stat-label">subtópicos</div></div>
+        <div class="stat"><div class="stat-value">17–21m</div><div class="stat-label">duração total</div></div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <div class="timeline-bar">
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c0)"></div><div class="tl-label">Fundamentos</div><div class="tl-dur">3–4 meses</div></div>
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c1)"></div><div class="tl-label">ML Clássico</div><div class="tl-dur">3 meses</div></div>
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c2)"></div><div class="tl-label">Deep Learning</div><div class="tl-dur">4–5 meses</div></div>
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c3)"></div><div class="tl-label">LLMs & NLP</div><div class="tl-dur">4–5 meses</div></div>
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c4)"></div><div class="tl-label">Agentes</div><div class="tl-dur">3–4 meses</div></div>
+      <div class="tl-phase"><div class="tl-dot" style="--phase-color: var(--c5)"></div><div class="tl-label">Produção</div><div class="tl-dur">contínuo</div></div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item"><span class="tag tag-core">fundamental</span> base teórica obrigatória</div>
+      <div class="legend-item"><span class="tag tag-advanced">avançado</span> domínio profundo</div>
+      <div class="legend-item"><span class="tag tag-practical">prático</span> implementação real</div>
+      <div class="legend-item"><span class="tag tag-research">pesquisa</span> fronteira atual</div>
+    </div>
+
+    <!-- ══ FASE 0 ══ -->
+    <section class="phase-section" id="fase-0">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c0)">fase 00</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Alicerces matemáticos e computacionais</h2>
+          <p class="phase-desc">Pré-requisito absoluto. Sem uma base sólida aqui, qualquer algoritmo é uma caixa-preta. Invista tempo real — a velocidade nas fases seguintes compensa.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ 3–4 meses</span>
+            <span class="phase-badge">4 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-0-0">
+          <div class="topic-head" onclick="toggleCard('tc-0-0')">
+            <div class="topic-icon">∑</div>
+            <span class="topic-name">Álgebra Linear</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Espaços vetoriais</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Vetores, bases, dimensão, subespaços lineares</li>
+                <li>Transformações lineares e suas representações matriciais</li>
+                <li>Mudança de base, coordenadas e isomorfismos</li>
+                <li>Produto interno, normas, ortogonalidade (Gram-Schmidt)</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Decomposições matriciais</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>SVD — Singular Value Decomposition: intuição geométrica e algoritmo</li>
+                <li>Eigendecomposição: autovetores/autovalores, diagonalização</li>
+                <li>PCA derivado da SVD — compressão de informação</li>
+                <li>QR decomposition para regressão numérica estável</li>
+                <li>LU, Cholesky para sistemas lineares eficientes</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Álgebra tensorial</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Tensores rank-N, shape, strides e layout de memória</li>
+                <li>Broadcasting: semântica e implicações de performance</li>
+                <li>Contrações, einsum e notação de Einstein</li>
+                <li>Reshapes, transposes e operações in-place vs. copy</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-0-1">
+          <div class="topic-head" onclick="toggleCard('tc-0-1')">
+            <div class="topic-icon">∂</div>
+            <span class="topic-name">Cálculo & Otimização</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Cálculo multivariável</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Gradientes, jacobianos, hessianas — derivação e interpretação</li>
+                <li>Regra da cadeia generalizada para funções compostas</li>
+                <li>Derivadas direcionais, gradiente como direção de máximo crescimento</li>
+                <li>Pontos críticos, condições de segunda ordem (Hessiana)</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Otimização irrestrita</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Gradient descent, SGD, mini-batch SGD — análise de convergência</li>
+                <li>Momentum e Nesterov Accelerated Gradient (NAG)</li>
+                <li>RMSProp: adaptação de taxa de aprendizado por parâmetro</li>
+                <li>Adam, AdaGrad, AdaMax — derivação completa passo a passo</li>
+                <li>Loss landscape: saddle points, platôs, vales estreitos</li>
+                <li>Learning rate schedules: warmup, cosine annealing, cyclical</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Otimização convexa</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Funções convexas: definição, propriedades, exemplos</li>
+                <li>Condições KKT e dualidade de Lagrange</li>
+                <li>Programação quadrática: aplicação em SVM</li>
+                <li>Métodos de barreira e interior-point</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-0-2">
+          <div class="topic-head" onclick="toggleCard('tc-0-2')">
+            <div class="topic-icon">P</div>
+            <span class="topic-name">Probabilidade & Estatística</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Teoria da probabilidade</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Espaços de probabilidade, eventos, σ-álgebras</li>
+                <li>Variáveis aleatórias discretas e contínuas, PDFs, CDFs</li>
+                <li>Distribuições conjuntas, marginais, condicionais</li>
+                <li>Expectância, variância, covariância, correlação</li>
+                <li>Desigualdades: Markov, Chebyshev, Hoeffding, Jensen</li>
+                <li>Teorema do Limite Central e Lei dos Grandes Números</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Inferência estatística</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>MLE — Maximum Likelihood Estimation: derivação e propriedades</li>
+                <li>MAP e inferência Bayesiana: prior, likelihood, posterior</li>
+                <li>Estimadores: viés, variância, erro quadrático médio, consistência</li>
+                <li>Testes de hipótese: p-values, erro tipo I/II, poder estatístico</li>
+                <li>Bootstrap, intervalos de confiança, validação cruzada</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Teoria da informação</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Entropia de Shannon H(X) e entropia conjunta/condicional</li>
+                <li>Entropia cruzada — conexão com MLE e função de perda</li>
+                <li>Divergência KL: não-simetria, convexidade, interpretação</li>
+                <li>Divergência Jensen-Shannon, F-divergências</li>
+                <li>Informação mútua, capacidade de canal, teorema de Shannon</li>
+                <li>Princípio MDL e complexidade de Kolmogorov</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-0-3">
+          <div class="topic-head" onclick="toggleCard('tc-0-3')">
+            <div class="topic-icon">{}</div>
+            <span class="topic-name">Programação & Engenharia</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Python científico</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>NumPy: broadcasting, fancy indexing, strides, layout de memória C vs. F</li>
+                <li>Pandas: operações vetorizadas, groupby, merge, MultiIndex</li>
+                <li>Matplotlib, Seaborn, Plotly — visualização analítica</li>
+                <li>SciPy: otimização, álgebra linear esparsa, transformadas</li>
+                <li>Estruturas de dados: heaps, tries, grafos (NetworkX)</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Sistemas e performance</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>Gerenciamento de memória: garbage collection, referências, cópia zero</li>
+                <li>Paralelismo: multiprocessing, threading, asyncio, Ray</li>
+                <li>Profiling: cProfile, line_profiler, memory_profiler, Py-Spy</li>
+                <li>Docker e Docker Compose para reprodutibilidade de experimentos</li>
+                <li>Git avançado: branching, rebase, stash, hooks CI/CD</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FASE 1 ══ -->
+    <section class="phase-section" id="fase-1">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c1)">fase 01</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Machine Learning Clássico</h2>
+          <p class="phase-desc">Teoria de aprendizado estatístico, modelos canônicos e o framework mental para analisar qualquer algoritmo. Essa fase te dá o "porquê" por trás de cada decisão de modelagem.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ 3 meses</span>
+            <span class="phase-badge">3 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-1-0">
+          <div class="topic-head" onclick="toggleCard('tc-1-0')">
+            <div class="topic-icon">📐</div>
+            <span class="topic-name">Teoria do Aprendizado Estatístico</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Framework PAC Learning</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>PAC (Probably Approximately Correct): definição formal, hipóteses</li>
+                <li>VC dimension: shattering, growth function, teorema de Sauer-Shelah</li>
+                <li>Complexidade de Rademacher: análise de capacidade de hipóteses</li>
+                <li>Teorema de generalização com bound uniforme</li>
+                <li>Sample complexity: quantos exemplos são necessários?</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Bias-Variance e regularização</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Decomposição do MSE: viés² + variância + ruído irredutível</li>
+                <li>Curvas de aprendizado: diagnóstico de underfitting/overfitting</li>
+                <li>Regularização L1 (Lasso), L2 (Ridge) como priors Bayesianos</li>
+                <li>Elastic Net, regularização de Tikhonov</li>
+                <li>Double descent: overfitting clássico vs. regime interpolante</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-1-1">
+          <div class="topic-head" onclick="toggleCard('tc-1-1')">
+            <div class="topic-icon">📊</div>
+            <span class="topic-name">Modelos Supervisionados</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Modelos lineares e generalizados</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Regressão linear: OLS via projeção, QR factorization, solução normal</li>
+                <li>Regressão logística: softmax, gradiente analítico, SGD</li>
+                <li>GLM: família exponencial, função de ligação, IRLS</li>
+                <li>Naive Bayes: estimativa de densidade condicional, smoothing de Laplace</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Métodos kernel e SVMs</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Kernel trick: feature maps implícitas, Mercer's theorem</li>
+                <li>SVM: margem máxima, formulação dual, KKT conditions</li>
+                <li>Kernels: RBF, polinomial, Matérn, string kernels, composição</li>
+                <li>Soft-margin SVM: parâmetro C e trade-off viés-variância</li>
+                <li>Gaussian Processes: prior sobre funções, posterior, hiperparâmetros</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Métodos de ensemble</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Decision trees: CART, impureza de Gini, entropia, pruning</li>
+                <li>Bagging e Random Forests: análise de variância por decorrelação</li>
+                <li>AdaBoost: algoritmo de pesos exponenciais, derivação</li>
+                <li>Gradient Boosting: conexão com otimização funcional</li>
+                <li>XGBoost, LightGBM, CatBoost: regularização, histogramas, categorias</li>
+                <li>Stacking e blending: meta-aprendizado com out-of-fold predictions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-1-2">
+          <div class="topic-head" onclick="toggleCard('tc-1-2')">
+            <div class="topic-icon">🔍</div>
+            <span class="topic-name">Modelos Não Supervisionados</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Clustering e estimação de densidade</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>K-means: convergência provada, Lloyd's algorithm, elbow method, k-means++</li>
+                <li>EM algorithm: derivação formal para GMMs, convergência ao MLE</li>
+                <li>DBSCAN e HDBSCAN: densidade topológica, eps, minPoints</li>
+                <li>Spectral clustering: Laplaciano de grafo normalizado, Fiedler vector</li>
+                <li>Hierarchical clustering: single/complete/average linkage, dendrogramas</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Redução de dimensionalidade</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>PCA primal e dual, Kernel PCA: teoria e complexidade</li>
+                <li>t-SNE: perplexidade, gradientes de KL, calibração de temperatura</li>
+                <li>UMAP: teoria de topologia algébrica simplicial, preservação de estrutura</li>
+                <li>Autoencoders como PCA não-linear: capacidade e regularização</li>
+                <li>ICA: independência estatística vs. decorrelação</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FASE 2 ══ -->
+    <section class="phase-section" id="fase-2">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c2)">fase 02</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Deep Learning</h2>
+          <p class="phase-desc">Fundamentos rigorosos e arquiteturas modernas. Da retropropagação ao Transformer. Cada bloco constrói sobre o anterior — não pule a teoria.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ 4–5 meses</span>
+            <span class="phase-badge">4 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-2-0">
+          <div class="topic-head" onclick="toggleCard('tc-2-0')">
+            <div class="topic-icon">🧠</div>
+            <span class="topic-name">Fundamentos de Redes Neurais</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Backpropagation rigoroso</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Grafo computacional: nós, arestas, fluxo de gradientes</li>
+                <li>Diferenciação automática: forward mode (JVP) vs. reverse mode (VJP)</li>
+                <li>Regra da cadeia em tensores de forma arbitrária</li>
+                <li>Implementação de autograd do zero (scalar → tensor)</li>
+                <li>Numerical gradient checking: finite differences, tolerâncias</li>
+                <li>Acumulação de gradientes, gradient tapas, higher-order derivatives</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Inicialização e normalização</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Xavier/Glorot initialization: derivação da variância preservada</li>
+                <li>He initialization para ReLU: análise de variância na ativação</li>
+                <li>Batch Normalization: covariate shift interno, γ/β aprendíveis, train vs. test</li>
+                <li>Layer Norm, Group Norm, RMS Norm — quando usar cada</li>
+                <li>Spectral normalization, weight tying (shared weights)</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Regularização em deep nets</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Dropout: interpretação como ensemble de subnetworks</li>
+                <li>DropConnect, Stochastic Depth, DropPath</li>
+                <li>Label smoothing, mixup, cutmix, mosaic augmentation</li>
+                <li>Gradient clipping (norm e value), gradient penalty (WGAN-GP)</li>
+                <li>Data augmentation: AutoAugment, RandAugment</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-2-1">
+          <div class="topic-head" onclick="toggleCard('tc-2-1')">
+            <div class="topic-icon">👁️</div>
+            <span class="topic-name">Arquiteturas para Visão Computacional</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Redes convolucionais</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Convolução como correlação cruzada, parâmetros e flops</li>
+                <li>Receptive field, dilation, depthwise-separable convolutions</li>
+                <li>Pooling: max, average, adaptive — invariância espacial</li>
+                <li>VGG, ResNet (skip connections e identity shortcuts), DenseNet</li>
+                <li>MobileNet (depthwise), EfficientNet (compound scaling)</li>
+                <li>Neural Architecture Search (NAS): DARTS, evolutionary methods</li>
+                <li>Detecção de objetos: YOLO, Faster R-CNN, anchor-free heads</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Vision Transformer (ViT) e derivados</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Patch embedding, posição 2D aprendida, CLS token</li>
+                <li>ViT puro: treinamento em escala, comparação com CNNs</li>
+                <li>DeiT: knowledge distillation com token de professor</li>
+                <li>Swin Transformer: janela deslizante, shifted window attention</li>
+                <li>MAE — Masked Autoencoders: masking 75%, decoder leve</li>
+                <li>CLIP: contrastive learning imagem-texto em escala</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-2-2">
+          <div class="topic-head" onclick="toggleCard('tc-2-2')">
+            <div class="topic-icon">🔤</div>
+            <span class="topic-name">Transformer & Mecanismo de Atenção</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Mecanismo de atenção</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Scaled dot-product attention: derivação do fator 1/√dk</li>
+                <li>Multi-head attention: projeções WQ, WK, WV, WO</li>
+                <li>Complexidade de tempo e memória O(n²) — implicações práticas</li>
+                <li>Causal masking (autoregressive), bidirectional attention</li>
+                <li>Cross-attention em encoder-decoder</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Arquitetura Transformer completa</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Encoder, decoder, encoder-decoder — trade-offs de uso</li>
+                <li>Feed-forward sublayer (2 camadas lineares, ativação), dimensões</li>
+                <li>Residual connections + layer norm: Pre-LN vs. Post-LN</li>
+                <li>Positional encoding: sinusoidal original, aprendido, RoPE, ALiBi</li>
+                <li>Treinamento: label smoothing, teacher forcing, scheduled sampling</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Atenção eficiente</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>FlashAttention 1/2/3: IO-aware, tiling em SRAM, sem materialização N×N</li>
+                <li>Sparse attention: local, strided, BigBird — análise de padrões</li>
+                <li>Linear attention: kernelização da softmax (Performer, cosFormer)</li>
+                <li>Multi-Query Attention (MQA) e Grouped-Query Attention (GQA)</li>
+                <li>Sliding window + global tokens (Longformer)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-2-3">
+          <div class="topic-head" onclick="toggleCard('tc-2-3')">
+            <div class="topic-icon">🎨</div>
+            <span class="topic-name">Modelos Generativos</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">GANs</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Formulação minimax: maximizar E[log D(x)] + E[log(1-D(G(z)))]</li>
+                <li>Instabilidade de treinamento: mode collapse, vanishing gradients</li>
+                <li>WGAN: distância Wasserstein-1, clipping vs. gradient penalty (WGAN-GP)</li>
+                <li>StyleGAN 2/3: mapping network, AdaIN, path length regularization</li>
+                <li>Progressive growing, truncation trick, FID e Inception Score</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">VAEs e modelos latentes</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>ELBO: derivação variacional, reparametrization trick, encoder-decoder</li>
+                <li>β-VAE: regularização aumentada, disentanglement de fatores</li>
+                <li>VQ-VAE: codebook discreto, straight-through estimator, EMA updates</li>
+                <li>NVAE, VDVAE: hierarquia de variáveis latentes, treinamento estável</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Modelos de difusão</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>DDPM: processo forward (ruído gaussiano), reverse (denoising score matching)</li>
+                <li>Score matching e conexão com SDEs estocásticas (Song et al. 2021)</li>
+                <li>DDIM: amostragem determinística, aceleração 10-100x</li>
+                <li>Latent Diffusion Models: compressão com VAE, operação em espaço latente</li>
+                <li>Classifier-free guidance (CFG): treinamento condicional/incondicional conjunto</li>
+                <li>Flow Matching: interpolação em linha reta, velocidade constante</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FASE 3 ══ -->
+    <section class="phase-section" id="fase-3">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c3)">fase 03</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Grandes Modelos de Linguagem</h2>
+          <p class="phase-desc">Pré-treinamento, fine-tuning, alinhamento e infraestrutura de serving. O stack completo de LLMs — da tokenização ao deployment com PagedAttention.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ 4–5 meses</span>
+            <span class="phase-badge">4 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-3-0">
+          <div class="topic-head" onclick="toggleCard('tc-3-0')">
+            <div class="topic-icon">📝</div>
+            <span class="topic-name">Tokenização & Representações</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Algoritmos de tokenização</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>BPE — Byte-Pair Encoding: algoritmo de merge, frequência de pares</li>
+                <li>WordPiece: critério de likelihood vs. frequência (BERT)</li>
+                <li>Unigram LM: modelo de linguagem sobre subwords (SentencePiece)</li>
+                <li>Byte-level BPE (GPT-2): tratamento nativo de Unicode e código</li>
+                <li>Análise de vocabulário: taxa de compressão, coverage multilíngue</li>
+                <li>Tokenização de código: tokens especiais, indentação, identifiers</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Embeddings de texto</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Word2Vec: skip-gram com negative sampling, CBOW — derivação dos gradientes</li>
+                <li>GloVe: fatoração da matriz de co-ocorrência logarítmica</li>
+                <li>FastText: subword embeddings para palavras raras/morfologia</li>
+                <li>Contextual: ELMo (BiLSTM) → BERT → GPT — evolução</li>
+                <li>Sentence-transformers (SBERT): fine-tuning para similaridade semântica</li>
+                <li>Matryoshka Representation Learning (MRL): embeddings comprimíveis</li>
+                <li>Benchmark MTEB: avaliação multitarefa de embeddings</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-3-1">
+          <div class="topic-head" onclick="toggleCard('tc-3-1')">
+            <div class="topic-icon">🏋️</div>
+            <span class="topic-name">Pré-treinamento de LLMs</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Objetivos de treinamento</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Causal LM (GPT-style): next-token prediction, cross-entropy loss</li>
+                <li>Masked LM (BERT-style): MLM 15%, NSP — análise crítica</li>
+                <li>Span corruption (T5): encoder-decoder, denoising de trechos</li>
+                <li>Prefix LM: atenção bidirecional no prefixo, causal no sufixo</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Scaling laws</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Chinchilla: compute-optimal training — tokens = 20× parâmetros</li>
+                <li>Power laws para loss vs. parâmetros, dados e FLOPs</li>
+                <li>Emergent abilities: phase transitions e debate sobre sua natureza</li>
+                <li>Grokking: generalização tardia após memorização</li>
+                <li>Scaling de inference: test-time compute como nova dimensão</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Infraestrutura de treinamento</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>Data parallelism: DDP, gradient synchronization, AllReduce</li>
+                <li>Tensor parallelism: Megatron-style column/row splitting</li>
+                <li>Pipeline parallelism: micro-batching, bubble overhead</li>
+                <li>ZeRO (DeepSpeed): stages 1/2/3 — otimizador, gradiente, parâmetro</li>
+                <li>Mixed precision FP16/BF16: loss scaling, gradient underflow</li>
+                <li>Gradient checkpointing: trade-off memória vs. re-computação</li>
+                <li>Dataset curation: dedup exato/fuzzy, quality filtering, tokenomics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-3-2">
+          <div class="topic-head" onclick="toggleCard('tc-3-2')">
+            <div class="topic-icon">🎯</div>
+            <span class="topic-name">Fine-tuning & Alinhamento</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Fine-tuning eficiente (PEFT)</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>LoRA: decomposição de baixo rank BA, rank r, α scaling</li>
+                <li>QLoRA: quantização 4-bit NF4 + LoRA, dequantização em FP16</li>
+                <li>DoRA: decomposição direcional e magnitude separadas</li>
+                <li>Prefix tuning e P-tuning v2: tokens virtuais no contexto</li>
+                <li>IA³: escalamento de ativações, mínimo de parâmetros novos</li>
+                <li>Full fine-tuning com gradient checkpointing para modelos menores</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">RLHF & variantes de alinhamento</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Reward model training: preferência humana como classificação binária</li>
+                <li>PPO para LLMs: valor, vantagem, clipping de ratio, KL penalty</li>
+                <li>DPO (Direct Preference Optimization): derivação da equivalência com RLHF</li>
+                <li>ORPO: odds-ratio como objetivo unificado sem reward model</li>
+                <li>SimPO, GRPO (DeepSeek-R1): otimizações para raciocínio</li>
+                <li>Constitutional AI (CAI): critique + revision, RLAIF</li>
+                <li>Iterative DPO: geração de preferências sintéticas on-policy</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Interpretabilidade e safety</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>Interpretabilidade mecanicista: circuitos, superposição, monosemanticity</li>
+                <li>Sparse Autoencoders (SAEs) para extração de features</li>
+                <li>Steering vectors: identificação e controle de comportamentos internos</li>
+                <li>Jailbreaks: GCG, AutoDAN, adversarial suffixes — defesas</li>
+                <li>Scalable oversight: debate, amplification, weak-to-strong generalization</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-3-3">
+          <div class="topic-head" onclick="toggleCard('tc-3-3')">
+            <div class="topic-icon">⚡</div>
+            <span class="topic-name">Inferência & Deployment</span>
+            <span class="topic-count">2 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Otimização de inferência</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>KV Cache: mecanismo, memória O(n×layers), gestão de vida útil</li>
+                <li>PagedAttention (vLLM): paginação virtual, fragmentação zero</li>
+                <li>Speculative decoding: draft model, verificação em paralelo</li>
+                <li>Quantização PTQ: GPTQ (layer-wise), AWQ (activation-aware)</li>
+                <li>Quantização QAT: fake quantization, straight-through estimator</li>
+                <li>Pruning estruturado: attention heads, FFN neurons, camadas inteiras</li>
+                <li>Destilação de conhecimento: soft targets, temperatura, capacidade</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Serving em produção</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>vLLM: continuous batching, multi-LoRA, tensor parallelism</li>
+                <li>TGI (Text Generation Inference): flash attention, sharding</li>
+                <li>ONNX Runtime e TensorRT: compilação, fusão de kernels, calibração</li>
+                <li>Triton Inference Server: dynamic batching, model ensemble</li>
+                <li>SLAs: latência P50/P95/P99, throughput tokens/s, concorrência</li>
+                <li>Prefill vs. decode: flops e memória distintos, separação de batches</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FASE 4 ══ -->
+    <section class="phase-section" id="fase-4">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c4)">fase 04</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Agentes de IA</h2>
+          <p class="phase-desc">Fundamentos de RL, arquitetura de agentes LLM-based, sistemas multi-agente, RAG avançado e gerenciamento de contexto. O núcleo da engenharia de agentes em 2025.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ 3–4 meses</span>
+            <span class="phase-badge">4 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-4-0">
+          <div class="topic-head" onclick="toggleCard('tc-4-0')">
+            <div class="topic-icon">🎮</div>
+            <span class="topic-name">Fundamentos de Agentes & RL</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Framework MDP</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Markov Decision Process: S, A, T(s'|s,a), R(s,a), γ — definição formal</li>
+                <li>Equação de Bellman para V(s) e Q(s,a)</li>
+                <li>Política ótima: policy iteration (policy eval + improvement)</li>
+                <li>Value iteration: convergência, norma de contração</li>
+                <li>POMDP: observações parciais, estados de crença, PBVI</li>
+                <li>Ambientes: episódicos vs. contínuos, determinísticos vs. estocásticos</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">RL model-free</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Q-learning: convergência, tabular vs. DQN (replay buffer, target network)</li>
+                <li>Double DQN, Dueling DQN, Prioritized Experience Replay</li>
+                <li>SARSA e Expected SARSA — on-policy vs. off-policy</li>
+                <li>REINFORCE (policy gradient): estimativa Monte Carlo, alta variância</li>
+                <li>Actor-Critic: A2C, A3C — estimativa de vantagem TD</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">RL avançado e model-based</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>PPO: clipping ratio, KL penalty, value function loss</li>
+                <li>SAC: entropia máxima, reparametrização para ações contínuas</li>
+                <li>TD3: double Q-networks, delayed policy updates</li>
+                <li>Dyna-Q: planejamento com modelo aprendido + real experience</li>
+                <li>AlphaZero: MCTS + rede política+valor, self-play</li>
+                <li>MuZero: planejamento sem regras do ambiente</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-4-1">
+          <div class="topic-head" onclick="toggleCard('tc-4-1')">
+            <div class="topic-icon">🔧</div>
+            <span class="topic-name">LLM Agents — Arquitetura</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Padrões de raciocínio</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>ReAct: Reasoning + Acting em interleaving — Thought/Action/Observation</li>
+                <li>Chain-of-Thought (CoT): zero-shot vs. few-shot, step-by-step</li>
+                <li>Self-Consistency: majority voting sobre múltiplas cadeias</li>
+                <li>Tree-of-Thoughts (ToT): busca BFS/DFS em árvore de raciocínio</li>
+                <li>Program-of-Thoughts: geração de código como chain-of-thought</li>
+                <li>Least-to-most prompting: decomposição e resolução incremental</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Uso de ferramentas (tool use)</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Function calling: schema JSON, validação, chamadas paralelas</li>
+                <li>Tool selection: grounding em descrições, retrieval de ferramentas</li>
+                <li>Code execution sandbox: Python REPL, E2B, CodeSandbox</li>
+                <li>Browser tools: Playwright, Selenium — web scraping e navegação</li>
+                <li>APIs externas: REST, GraphQL, autenticação OAuth em fluxos de agente</li>
+                <li>File I/O: leitura/escrita de documentos, formulários, planilhas</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Memória de agentes</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Working memory: contexto de conversa, scratchpad, janela de tokens</li>
+                <li>Episodic memory: sumários comprimidos progressivos (MemGPT)</li>
+                <li>Semantic memory: knowledge base estruturada + RAG</li>
+                <li>Procedural memory: cache de workflows, ferramentas e heurísticas</li>
+                <li>Forgetting e consolidação: estratégias de eviction, recency vs. relevance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-4-2">
+          <div class="topic-head" onclick="toggleCard('tc-4-2')">
+            <div class="topic-icon">🌐</div>
+            <span class="topic-name">Multi-Agente & Orquestração</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Frameworks de orquestração</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>LangGraph: grafo de estados, ciclos, persistência com checkpoints</li>
+                <li>AutoGen: conversação multi-agente, execução de código gerenciado</li>
+                <li>CrewAI: papéis de agente, delegação hierárquica, memória compartilhada</li>
+                <li>Swarm: handoffs stateless, variáveis de contexto, simplicidade</li>
+                <li>Microsoft Semantic Kernel: plugins, planner, integração Azure</li>
+                <li>LlamaIndex Workflows: event-driven, steps, streaming</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Padrões arquiteturais</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Orchestrator-subagent: hierarquia de controle e delegação</li>
+                <li>Specialist routing: classificador de intenção + pool de agentes</li>
+                <li>Peer-to-peer: negociação, votação e consenso entre agentes</li>
+                <li>Blackboard system: estado compartilhado, producers e consumers</li>
+                <li>Map-reduce de agentes: paralelismo em subtarefas independentes</li>
+                <li>Supervisor pattern: agente verificador + agente executor</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Coordenação e confiabilidade</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>Trust propagation em cadeias de agentes</li>
+                <li>Detecção de conflito de ferramentas, race conditions</li>
+                <li>Verificação formal de planos (PDDL, LTL)</li>
+                <li>Consenso em agentes LLM — pesquisa emergente</li>
+                <li>Sandboxing: containment de agentes, permissões mínimas</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-4-3">
+          <div class="topic-head" onclick="toggleCard('tc-4-3')">
+            <div class="topic-icon">🧩</div>
+            <span class="topic-name">Componentes Críticos de Agentes</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">RAG — Retrieval-Augmented Generation</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Indexação: chunking estratégico, overlap, hierarquia parent-child</li>
+                <li>Dense retrieval: DPR, E5, BGE, nomic-embed — benchmarks BEIR</li>
+                <li>Sparse retrieval: BM25, SPLADE, unicoil — complementaridade</li>
+                <li>Hybrid search: combinação RRF (Reciprocal Rank Fusion)</li>
+                <li>Reranking: cross-encoder, Cohere Rerank, MonoT5</li>
+                <li>GraphRAG: grafo de entidades, comunidades Leiden, global reasoning</li>
+                <li>RAG avaliado: RAGAS (faithfulness, relevancy, context recall)</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Planning & task decomposition</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Hierarchical Task Networks (HTN): decomposição de tasks em métodos</li>
+                <li>LLM+P: tradução de linguagem natural para PDDL e planejamento</li>
+                <li>SayCan: scoring de ações por LLM × affordance score</li>
+                <li>Subgoal decomposition e verificação de progresso (landmarks)</li>
+                <li>Self-correction: reflexão ativa, re-planning, crítica interna</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Context management</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Context window: 4k → 128k → 1M tokens — trade-offs de custo/qualidade</li>
+                <li>LLMLingua: compressão de prompt por token importance scoring</li>
+                <li>Selective retention: relevance scoring para eviction de histórico</li>
+                <li>Attention sinks (StreamingLLM): tokens âncora para janela deslizante</li>
+                <li>State machines para sessões longas de agente: fases e transições</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FASE 5 ══ -->
+    <section class="phase-section" id="fase-5">
+      <div class="phase-header">
+        <div class="phase-number" style="--phase-color: var(--c5)">fase 05</div>
+        <div class="phase-info">
+          <h2 class="phase-title">Produção, Segurança & Fronteira de Pesquisa</h2>
+          <p class="phase-desc">Levar sistemas ao ar com qualidade de produção, garantir segurança e privacidade, e participar ativamente da fronteira de pesquisa em IA.</p>
+          <div class="phase-meta">
+            <span class="phase-badge">⏱ contínuo</span>
+            <span class="phase-badge">3 módulos</span>
+          </div>
+        </div>
+      </div>
+      <div class="topic-grid">
+
+        <div class="topic-card" id="tc-5-0">
+          <div class="topic-head" onclick="toggleCard('tc-5-0')">
+            <div class="topic-icon">🏗️</div>
+            <span class="topic-name">MLOps & LLMOps</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Ciclo de vida de modelos</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>Experiment tracking: MLflow, Weights & Biases — métricas, artefatos, sweep</li>
+                <li>Data versioning: DVC, LakeFS — reproducibilidade de datasets</li>
+                <li>Feature store: Feast, Tecton — serving offline/online unificado</li>
+                <li>Model registry: promoção staging → production, rollback</li>
+                <li>CI/CD para ML: training pipelines, Kubeflow, Metaflow, Prefect</li>
+                <li>Canary deployment, shadow mode, A/B testing com métricas de negócio</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Observabilidade de LLMs</span><span class="tag tag-practical">prático</span></div>
+              <ul class="subtopic-list">
+                <li>Tracing: LangSmith, Langfuse, Arize Phoenix — traces distribuídos</li>
+                <li>Métricas de produção: latência TTFT/TPOT, tokens/s, custo por chamada</li>
+                <li>Drift detection: concept drift, data drift, output distribution shift</li>
+                <li>Alertas e SLOs: P95 latency, error rate, hallucination rate</li>
+                <li>Evals contínuas em produção: sample + score automatizado</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Avaliação de LLMs e agentes</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>RAGAS: faithfulness, answer relevancy, context precision/recall</li>
+                <li>LLM-as-judge: G-Eval, critérios customizados, calibração com humanos</li>
+                <li>Human eval vs. automated: correlação de Spearman, viés de posição</li>
+                <li>Benchmarks: MMLU, HumanEval, GSM8K, MATH, GPQA</li>
+                <li>Benchmarks de agente: AgentBench, GAIA, SWE-bench, WebArena</li>
+                <li>Evals de segurança: StrongREJECT, JailbreakBench</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-5-1">
+          <div class="topic-head" onclick="toggleCard('tc-5-1')">
+            <div class="topic-icon">🔒</div>
+            <span class="topic-name">Segurança & Responsabilidade em IA</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Ataques e defesas</span><span class="tag tag-core">fundamental</span></div>
+              <ul class="subtopic-list">
+                <li>Prompt injection direta: override de sistema, role hijacking</li>
+                <li>Prompt injection indireta: via documentos, web, tools — vetores de ataque</li>
+                <li>Jailbreaking: GCG, AutoDAN, many-shot jailbreaking</li>
+                <li>Data poisoning em RAG: manipulação de documentos no índice</li>
+                <li>Model extraction e membership inference attacks</li>
+                <li>Defesas: input filtering, output monitoring, sandboxing, privilege separation</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Privacidade e compliance</span><span class="tag tag-advanced">avançado</span></div>
+              <ul class="subtopic-list">
+                <li>Differential Privacy: ε-DP, mecanismos de Laplace e Gaussiano</li>
+                <li>DP-SGD: clipping de gradiente + ruído — trade-off privacidade/utilidade</li>
+                <li>Federated Learning: FedAvg, comunicação segura, heterogeneidade</li>
+                <li>PII detection e redação: SpaCy NER, presidio, scrubbing pipelines</li>
+                <li>LGPD/GDPR/CCPA: direito ao esquecimento em modelos treinados</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Responsabilidade e auditoria</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>SHAP: Shapley values — teoria de jogos aplicada à atribuição</li>
+                <li>LIME: surrogate models locais, kernel SHAP</li>
+                <li>Fairness: disparate impact, equalized odds, calibration por grupo</li>
+                <li>Red-teaming: metodologias, responsible disclosure, bug bounties</li>
+                <li>Model cards, datasheets, system cards — documentação de responsabilidade</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="tc-5-2">
+          <div class="topic-head" onclick="toggleCard('tc-5-2')">
+            <div class="topic-icon">🔬</div>
+            <span class="topic-name">Fronteira de Pesquisa</span>
+            <span class="topic-count">3 blocos</span>
+            <span class="topic-chevron">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Reasoning e planejamento avançado</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>OpenAI o1/o3: chain-of-thought de longa duração, compute at test-time</li>
+                <li>DeepSeek-R1: GRPO + cold start, raciocínio emergente</li>
+                <li>Process Reward Models (PRM) vs. Outcome Reward Models (ORM)</li>
+                <li>Self-play e MCTS aplicados a raciocínio verbal</li>
+                <li>Budget forcing: controle de comprimento de CoT</li>
+                <li>Verificação formal com LLMs: Lean 4, Coq, Isabelle</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Arquiteturas emergentes</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>State Space Models: S4, Mamba — seletividade e O(n) em sequência</li>
+                <li>Mamba-2 e conexão com attention linear estruturada</li>
+                <li>Mixture of Experts (MoE): sparse routing, expert collapse, load balancing</li>
+                <li>Hybrid Mamba-Transformer: Jamba, Zamba — melhor dos dois mundos</li>
+                <li>Test-time compute scaling: beam search, parallel sampling, refinement</li>
+                <li>Upcycling: converter modelos densos em MoE</li>
+              </ul>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-header"><span class="subtopic-name">Embodied AI & World Models</span><span class="tag tag-research">pesquisa</span></div>
+              <ul class="subtopic-list">
+                <li>Robótica fundacional: RT-2, π0, Octo — políticas visuomotoras</li>
+                <li>Diffusion policies: geração de trajetórias por score matching</li>
+                <li>World models: DreamerV3, GAIA-1 — simulação interna do ambiente</li>
+                <li>Video generation como modelo de mundo: Sora, Wan, Open-Sora</li>
+                <li>Multimodal agents: visão + linguagem + ação unificados</li>
+                <li>Sim-to-real transfer: domain randomization, adaptation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- SCROLL TO TOP -->
+<a class="to-top" href="#" id="to-top" title="Voltar ao topo">↑</a>
+
+<script>
+  // ── TOGGLE CARDS ──
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // ── NAV ACTIVE ──
+  function setActive(el) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ── SCROLL SPY ──
+  const sections = document.querySelectorAll('.phase-section');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.getAttribute('href') === `#${id}`) item.classList.add('active');
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── SCROLL TO TOP ──
+  const toTop = document.getElementById('to-top');
+  const mainEl = document.getElementById('main-scroll') || window;
+
+  window.addEventListener('scroll', () => {
+    toTop.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // ── SEARCH ──
+  function handleSearch(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      // Reset highlights
+      document.querySelectorAll('mark').forEach(m => {
+        m.replaceWith(document.createTextNode(m.textContent));
+      });
+      document.querySelectorAll('.topic-card').forEach(c => {
+        c.style.display = '';
+        c.classList.remove('open');
+      });
+      document.querySelectorAll('.topic-body').forEach(b => b.style.display = '');
+      return;
+    }
+
+    document.querySelectorAll('.topic-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (text.includes(q)) {
+        card.style.display = '';
+        card.classList.add('open');
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // ── OPEN ALL ON LOAD (first phase) ──
+  // Open first card of first phase by default
+  document.getElementById('tc-0-0') && document.getElementById('tc-0-0').classList.add('open');
+
+  // ── PROGRESS COUNTER ──
+  // Count how many topic-cards are open
+  function updateProgress() {
+    const total = document.querySelectorAll('.topic-card').length;
+    const open = document.querySelectorAll('.topic-card.open').length;
+    const pct = Math.round((open / total) * 100);
+    const fill = document.getElementById('prog-fill');
+    const pctEl = document.getElementById('prog-pct');
+    if (fill) fill.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+  }
+
+  document.querySelectorAll('.topic-head').forEach(head => {
+    head.addEventListener('click', () => setTimeout(updateProgress, 50));
+  });
+
+  setTimeout(updateProgress, 100);
+</script>
+
+</body>
+</html>
