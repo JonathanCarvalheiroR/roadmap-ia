@@ -1647,9 +1647,15 @@
   }
 
   // ── NAV ACTIVE ──
+  let scrollSpyPaused = false;
+
   function setActive(el) {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
+    // Pause scroll spy briefly so it doesn't override the click
+    scrollSpyPaused = true;
+    clearTimeout(window._scrollSpyTimer);
+    window._scrollSpyTimer = setTimeout(() => { scrollSpyPaused = false; }, 800);
   }
 
   // ── SCROLL SPY ──
@@ -1657,6 +1663,7 @@
   const navItems = document.querySelectorAll('.nav-item');
 
   const observer = new IntersectionObserver(entries => {
+    if (scrollSpyPaused) return;
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.id;
