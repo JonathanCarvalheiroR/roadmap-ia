@@ -1640,11 +1640,16 @@
 <a class="to-top" href="#" id="to-top" title="Voltar ao topo">↑</a>
 
 <script>
-  // ── TOGGLE CARDS ──
-  function toggleCard(id) {
-    const card = document.getElementById(id);
-    card.classList.toggle('open');
+ // ── TOGGLE CARDS ──
+function toggleCard(id, event) {
+  // Impede que o clique suba para outros elementos
+  if (event) {
+    event.stopPropagation();
   }
+  
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
 
   // ── NAV ACTIVE ──
   let scrollSpyPaused = false;
